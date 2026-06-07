@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Hewan - Edukasi Anak</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Background dengan animasi -->
+    <div class="background-animation"></div>
+
+    <!-- Halaman Home -->
+    <div class="container home-page">
+        <!-- Navigation Bar -->
+        <nav class="nav-bar" aria-label="Navigasi utama">
+            <a href="index.html" class="nav-item active" id="nav-home"><span class="nav-emoji">🏠</span> Home</a>
+            <a href="belajar-hewan.html" class="nav-item" id="nav-animals"><span class="nav-emoji">🦁</span> Belajar Hewan</a>
+            <a href="calistung.html" class="nav-item" id="nav-calistung"><span class="nav-emoji">✏️</span> Calistung</a>
+            <a href="kuis.html" class="nav-item" id="nav-games"><span class="nav-emoji">🎮</span> Kuis & Game</a>
+        </nav>
+
+        <!-- Header -->
+        <header class="page-header">
+            <div class="mascot-container">
+                <div class="mascot">🦁</div>
+                <div>
+                    <h1 class="page-title">Belajar Hewan</h1>
+                    <p class="subtitle">Mari Belajar Sambil Bermain!</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Menu Utama -->
+        <main class="menu-container">
+            <div class="menu-grid">
+                <!-- Menu Belajar Hewan -->
+                <a href="belajar-hewan.html" class="menu-card">
+                    <div class="menu-icon">🦁</div>
+                    <h2 class="menu-title">Belajar Hewan</h2>
+                    <p class="menu-desc">Mengenal berbagai hewan dan fakta menarik</p>
+                    <div class="menu-button">MULAI</div>
+                </a>
+
+                <!-- Menu Calistung -->
+                <a href="calistung.html" class="menu-card">
+                    <div class="menu-icon">✏️</div>
+                    <h2 class="menu-title">Calistung</h2>
+                    <p class="menu-desc">Belajar Baca, Tulis, dan Hitung</p>
+                    <div class="menu-button">MULAI</div>
+                </a>
+
+                <!-- Menu Kuis -->
+                <a href="kuis.html" class="menu-card">
+                    <div class="menu-icon">🎮</div>
+                    <h2 class="menu-title">Kuis & Game</h2>
+                    <p class="menu-desc">Mainkan game dan kuis seru!</p>
+                    <div class="menu-button">MULAI</div>
+                </a>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>🎓 Belajar Sambil Bermain untuk Anak Cerdas 🎓</p>
+        </footer>
+    </div>
+
+    <!-- Audio background -->
+    <audio id="bgMusic" loop volume="0.3">
+        <source src="assets/sounds/bg-music.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Configuration -->
+    <script src="js/config.js"></script>
+
+    <!-- Main Application Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/animals.js"></script>
+    <script src="js/calistung.js"></script>
+    <script src="js/games.js"></script>
+</body>
+</html>

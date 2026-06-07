@@ -1,0 +1,42 @@
+{
+  "name": "belajar-hewan",
+  "version": "1.0.0",
+  "description": "Aplikasi edukasi hewan untuk anak-anak",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 8000 -o",
+    "dev": "http-server -p 8000",
+    "build": "echo 'No build required - Pure HTML/CSS/JS'",
+    "test": "echo 'Add test command here'",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "education",
+    "kids",
+    "learning",
+    "animals",
+    "calistung",
+    "baca-tulis-hitung",
+    "indonesian"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "homepage": ".",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/belajar-hewan"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

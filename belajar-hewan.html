@@ -1,0 +1,451 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Hewan - Edukasi Anak</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <style>
+        .animals-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 10px 40px;
+        }
+
+        .animals-header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.8s ease;
+        }
+
+        .animals-header h2 {
+            font-size: 36px;
+            color: white;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.35);
+            margin-bottom: 10px;
+        }
+
+        .animals-header p {
+            font-size: 18px;
+            color: #FFE66D;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+        }
+
+        .filter-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark-color);
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(255, 107, 107, 0.25);
+        }
+
+        .search-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 420px;
+            padding: 14px 18px;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: 30px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--dark-color);
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #9d9d9d;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.25);
+        }
+
+        .animals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+            padding: 0 10px;
+            margin-bottom: 30px;
+        }
+
+        .animal-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 22px 18px;
+            text-align: center;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .animal-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 18px 28px rgba(0, 0, 0, 0.18);
+        }
+
+        .animal-icon {
+            font-size: 72px;
+            margin-bottom: 15px;
+            animation: pulse 2s ease infinite;
+        }
+
+        .animal-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 6px;
+        }
+
+        .animal-fact {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            min-height: 42px;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .difficulty-mudah {
+            background: #95E1D3;
+            color: #1f3f32;
+        }
+
+        .difficulty-sedang {
+            background: #FFE66D;
+            color: #4b3d0a;
+        }
+
+        .difficulty-sulit {
+            background: #FF6B6B;
+            color: white;
+        }
+
+        .animal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .animal-image {
+            width: 100%;
+            max-height: 140px;
+            object-fit: cover;
+            border-radius: 18px;
+            margin-bottom: 14px;
+            background: #f7f9ff;
+        }
+
+        .action-btn {
+            width: 100%;
+            min-width: 120px;
+            padding: 16px 14px;
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-sound {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-sound:hover,
+        .btn-sound.playing {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(78, 205, 196, 0.32);
+        }
+
+        .btn-sound.playing {
+            background: #3db8ad;
+        }
+
+        .btn-detail {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-detail:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 107, 107, 0.28);
+        }
+
+        .animal-detail-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 50;
+        }
+
+        .animal-detail-modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 520px;
+            background: #ffffff;
+            border-radius: 30px;
+            padding: 28px;
+            box-shadow: 0 24px 56px rgba(0, 0, 0, 0.25);
+            position: relative;
+            text-align: center;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: #f3f3f3;
+            font-size: 22px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            transform: scale(1.05);
+            background: #ececec;
+        }
+
+        .modal-icon {
+            font-size: 80px;
+            margin-bottom: 18px;
+        }
+
+        .modal-title {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            font-size: 16px;
+            color: var(--secondary-color);
+            margin-bottom: 22px;
+        }
+
+        .modal-description {
+            font-size: 16px;
+            color: #5b6b7b;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .modal-info-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .modal-info-card {
+            background: #f7f9ff;
+            border-radius: 18px;
+            padding: 18px;
+            text-align: left;
+        }
+
+        .modal-info-card span {
+            display: block;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .modal-info-card strong {
+            font-size: 18px;
+            color: var(--dark-color);
+        }
+
+        @media (max-width: 768px) {
+            .animals-grid {
+                grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+                gap: 16px;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+
+            .modal-box {
+                padding: 22px;
+            }
+
+            .modal-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .animals-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
+            }
+
+            .animal-icon {
+                font-size: 58px;
+            }
+
+            .animal-name {
+                font-size: 18px;
+            }
+
+            .search-input {
+                max-width: 100%;
+            }
+
+            .modal-box {
+                padding: 18px;
+            }
+
+            .modal-info-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <nav class="nav-bar" aria-label="Navigasi utama">
+        <a href="index.html" class="nav-item"><span class="nav-emoji">🏠</span> Home</a>
+        <a href="belajar-hewan.html" class="nav-item active"><span class="nav-emoji">🦁</span> Belajar Hewan</a>
+        <a href="calistung.html" class="nav-item"><span class="nav-emoji">✏️</span> Calistung</a>
+        <a href="kuis.html" class="nav-item"><span class="nav-emoji">🎮</span> Kuis & Game</a>
+    </nav>
+
+    <header class="page-header">
+        <div class="mascot-container">
+            <div class="mascot">🦁</div>
+            <div>
+                <h1 class="page-title">Belajar Hewan</h1>
+                <p class="subtitle">Kenali Hewan Seru + Fakta Menarik</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-action-row">
+        <a href="index.html" class="btn btn-secondary back-home-btn"><span class="nav-emoji">🏠</span> Kembali ke Home</a>
+    </div>
+
+    <div class="container">
+        <div class="animals-container">
+            <div class="animals-header">
+                <h2>Temukan Hewan Favoritmu</h2>
+                <p>Pilih kartu hewan, dengarkan suaranya, dan pelajari fakta seru.</p>
+            </div>
+
+            <div class="filter-section">
+                <button class="filter-btn active" data-filter="semua">Semua</button>
+                <button class="filter-btn" data-filter="mudah">Mudah</button>
+                <button class="filter-btn" data-filter="sedang">Sedang</button>
+                <button class="filter-btn" data-filter="sulit">Sulit</button>
+            </div>
+
+            <div class="search-section">
+                <input
+                    type="text"
+                    class="search-input"
+                    id="searchInput"
+                    placeholder="🔍 Cari nama hewan..."
+                >
+            </div>
+
+            <div class="animals-grid" id="animalsGrid"></div>
+        </div>
+    </div>
+
+    <div class="animal-detail-modal" id="animalDetailModal" aria-hidden="true">
+        <div class="modal-box">
+            <button class="modal-close" id="closeDetailModal">✕</button>
+            <div class="modal-icon" id="detailAnimalIcon">🦁</div>
+            <h2 class="modal-title" id="detailAnimalName">Nama Hewan</h2>
+            <p class="modal-subtitle" id="detailAnimalEnglish">English Name</p>
+            <p class="modal-description" id="detailAnimalDescription">Deskripsi singkat tentang hewan.</p>
+            <div class="modal-info-row">
+                <div class="modal-info-card">
+                    <span>Kategori</span>
+                    <strong id="detailAnimalDifficulty">Mudah</strong>
+                </div>
+                <div class="modal-info-card">
+                    <span>Fakta</span>
+                    <strong id="detailAnimalFact">Fakta singkat di sini.</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="animalSound"></audio>
+
+    <script src="js/animals.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.animalLearning) {
+                window.animalLearning.init();
+            }
+        });
+    </script>
+
+    <footer class="footer">
+        <p>🎓 Belajar Sambil Bermain untuk Anak Cerdas 🎓</p>
+    </footer>
+</body>
+</html>

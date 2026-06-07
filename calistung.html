@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calistung - Edukasi Anak</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <style>
+        /* ========================================
+           CALISTUNG PAGE STYLING
+           ======================================== */
+
+        .calistung-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Tab Navigation */
+        .calistung-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: white;
+            border: 3px solid #ddd;
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--dark-color);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: var(--secondary-color);
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tab-content h2 {
+            font-size: 32px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .intro-text {
+            font-size: 18px;
+            color: #FFE66D;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* ========================================
+           SECTION 1: MEMBACA (MATCHING GAME)
+           ======================================== */
+
+        .matching-game {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .matching-left, .matching-right {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .animal-item, .letter-item {
+            background: white;
+            border: 3px solid var(--secondary-color);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: grab;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            font-weight: bold;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .animal-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .animal-item.dragging {
+            opacity: 0.7;
+            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.5);
+        }
+
+        .animal-emoji {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .animal-name {
+            font-size: 16px;
+            color: var(--dark-color);
+        }
+
+        .matching-arrow {
+            font-size: 40px;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        .letter-item {
+            font-size: 32px;
+            color: white;
+            background: var(--secondary-color);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .letter-item.matched {
+            background: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .letter-item.wrong {
+            background: #FF6B6B;
+            border-color: #FF6B6B;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* ========================================
+           SECTION 2: MENULIS (TRACING)
+           ======================================== */
+
+        .writing-exercise {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .animal-selection-write {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .animal-selection-write label {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-right: 15px;
+        }
+
+        .animal-selection-write select {
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 15px;
+            border: 2px solid var(--secondary-color);
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tracing-area {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* ========================================
+           WRITING FEEDBACK & ANIMATIONS
+           ======================================== */
+
+        #writingFeedback {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 15px;
+            animation: slideDown 0.5s ease;
+        }
+
+        #writingFeedback.feedback-correct {
+            background: linear-gradient(135deg, var(--success-color), #52C9B5);
+            color: white;
+            box-shadow: 0 8px 25px rgba(149,225,211,0.4);
+        }
+
+        #writingFeedback.feedback-wrong {
+            background: #FF6B6B;
+            color: white;
+            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10% { transform: translateX(-5px); }
+            20% { transform: translateX(5px); }
+            30% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            50% { transform: translateX(-5px); }
+            60% { transform: translateX(5px); }
+            70% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+            90% { transform: translateX(-5px); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes confetti {
+            0% {
+                transform: translateY(0) rotateZ(0deg) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-500px) rotateZ(720deg) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+            animation: confetti 3s ease-out forwards;
+            z-index: 9999;
+        }
+
+        .canvas-highlight {
+            animation: highlightFlash 0.6s ease;
+        }
+
+        @keyframes highlightFlash {
+            0% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+            100% { filter: brightness(1); }
+        }
+
+        #writingHintArea {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary-color);
+            padding: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 10px;
+        }
+
+        #tracingCanvas {
+            border: 3px dashed var(--secondary-color);
+            border-radius: 15px;
+            background: white;
+            cursor: crosshair;
+            display: block;
+            margin: 0 auto 15px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .canvas-text {
+            font-size: 16px;
+            color: #7f8c8d;
+            font-weight: bold;
+        }
+
+        .writing-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ========================================
+           SECTION 3: MENGHITUNG (COUNTING)
+           ======================================== */
+
+        .counting-game {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .counting-animal-card {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .animal-image {
+            font-size: 100px;
+            margin-bottom: 15px;
+        }
+
+        .counting-question {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+        }
+
+        .counting-options {
+            margin: 30px 0;
+        }
+
+        .counting-options h3 {
+            font-size: 24px;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .counting-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .count-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .count-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .count-btn.selected {
+            background: var(--primary-color);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .counting-feedback {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            min-height: 40px;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .counting-feedback.correct {
+            background: var(--success-color);
+            color: white;
+            animation: slideDown 0.5s ease;
+        }
+
+        .counting-feedback.wrong {
+            background: #FF6B6B;
+            color: white;
+            animation: shake 0.5s ease;
+        }
+
+        /* ========================================
+           COUNTING SUB-TABS (Hitung Tubuh, +, -)
+           ======================================== */
+
+        .counting-subtabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .counting-subtab-btn {
+            background: white;
+            border: 3px solid #ddd;
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--dark-color);
+        }
+
+        .counting-subtab-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: var(--secondary-color);
+        }
+
+        .counting-subtab-btn.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+            box-shadow: 0 8px 20px rgba(78, 205, 196, 0.4);
+        }
+
+        .counting-submodule {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* ========================================
+           BUTTONS
+           ======================================== */
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #95E1D3;
+            color: var(--dark-color);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+
+        @media (max-width: 768px) {
+            .matching-game {
+                grid-template-columns: 1fr;
+            }
+
+            .matching-arrow {
+                transform: rotate(90deg);
+            }
+
+            .calistung-tabs {
+                gap: 8px;
+            }
+
+            .tab-btn {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            #tracingCanvas {
+                width: 100%;
+                max-width: 90%;
+            }
+
+            .counting-buttons {
+                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calistung-wrapper {
+                padding: 10px;
+            }
+
+            .matching-game,
+            .writing-exercise,
+            .counting-game {
+                padding: 20px;
+            }
+
+            .tab-content h2 {
+                font-size: 24px;
+            }
+
+            .animal-emoji {
+                font-size: 40px;
+            }
+
+            .animal-image {
+                font-size: 70px;
+            }
+
+            .counting-question {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background dengan animasi -->
+    <div class="background-animation"></div>
+
+    <nav class="nav-bar" aria-label="Navigasi utama">
+        <a href="index.html" class="nav-item"><span class="nav-emoji">🏠</span> Home</a>
+        <a href="belajar-hewan.html" class="nav-item"><span class="nav-emoji">🦁</span> Belajar Hewan</a>
+        <a href="calistung.html" class="nav-item active"><span class="nav-emoji">✏️</span> Calistung</a>
+        <a href="kuis.html" class="nav-item"><span class="nav-emoji">🎮</span> Kuis & Game</a>
+    </nav>
+
+    <header class="page-header">
+        <div class="mascot-container">
+            <div class="mascot">✏️</div>
+            <div>
+                <h1 class="page-title">Calistung</h1>
+                <p class="subtitle">Baca, Tulis, dan Hitung dengan Senang</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-action-row">
+        <a href="index.html" class="btn btn-secondary back-home-btn"><span class="nav-emoji">🏠</span> Kembali ke Home</a>
+    </div>
+
+    <!-- Calistung Container -->
+    <div class="calistung-wrapper">
+        <!-- Tab Navigation -->
+        <div class="calistung-tabs">
+            <button class="tab-btn active" onclick="switchTab('membaca')">📖 Membaca</button>
+            <button class="tab-btn" onclick="switchTab('menulis')">✏️ Menulis</button>
+            <button class="tab-btn" onclick="switchTab('menghitung')">🔢 Menghitung</button>
+        </div>
+
+        <!-- ========================================
+             TAB 1: MEMBACA (MATCHING GAME)
+             ======================================== -->
+        <div id="membaca" class="tab-content active">
+            <h2>📖 Membaca Interaktif</h2>
+            <p class="intro-text">Pilih level belajar: dari mengenal huruf awal sampai membaca kata lengkap.</p>
+
+            <div style="display:flex; gap:10px; justify-content:center; margin-bottom:20px; flex-wrap:wrap;">
+                <button class="tab-btn active" id="readLevel1Btn">Level 1: Huruf Awal</button>
+                <button class="tab-btn" id="readLevel2Btn">Level 2: Eja Nama</button>
+                <button class="tab-btn" id="readLevel3Btn">Level 3: Bacalah Kata</button>
+            </div>
+
+            <div id="readingContainer">
+                <!-- Level 1: Enhanced Matching -->
+                <div id="readingLevel1" class="reading-level active">
+                    <div class="matching-game">
+                        <div class="matching-left" id="matchingAnimals">
+                            <!-- Animals akan dimuat oleh JavaScript -->
+                        </div>
+                        <div class="matching-arrow">→</div>
+                        <div class="matching-right" id="matchingLetters">
+                            <!-- Letters akan dimuat oleh JavaScript -->
+                        </div>
+                    </div>
+                    <div style="text-align:center; margin-top:10px;">
+                        <button class="btn btn-success" id="checkMatchBtn">✓ Periksa Jawaban</button>
+                    </div>
+                </div>
+
+                <!-- Level 2: Spell the Name (click letters) -->
+                <div id="readingLevel2" class="reading-level" style="display:none;">
+                    <div class="vocab-card" style="display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap;">
+                        <div style="min-width:260px; text-align:center;">
+                            <div id="spellImage" style="font-size:120px;">🦁</div>
+                            <div id="spellNameHint" style="font-size:18px; color:#7f8c8d; margin-top:8px;">Klik huruf untuk mengeja</div>
+                        </div>
+                        <div style="min-width:320px; text-align:center;">
+                            <div id="spellSlots" style="display:flex; gap:8px; justify-content:center; margin-bottom:12px;"></div>
+                            <div id="spellLetters" style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;"></div>
+                            <div style="margin-top:12px;">
+                                <button class="btn btn-secondary" id="spellRetryBtn">🔁 Ulangi</button>
+                                <button class="btn btn-primary" id="spellNextBtn">➡️ Selanjutnya</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Level 3: Read Aloud with letter-by-letter reveal -->
+                <div id="readingLevel3" class="reading-level" style="display:none;">
+                    <div style="text-align:center; background:white; border-radius:20px; padding:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+                        <!-- Gambar Hewan -->
+                        <div id="readImage" style="font-size:140px; margin-bottom:20px;">🐘</div>
+                        
+                        <!-- Pertanyaan -->
+                        <div style="font-size:24px; font-weight:bold; color:var(--dark-color); margin-bottom:20px;">
+                            Ketik nama hewan di bawah ini:
+                        </div>
+                        
+                        <!-- Petunjuk Huruf -->
+                        <div id="readWordSlots" style="font-size:48px; font-weight:bold; letter-spacing:6px; margin-bottom:30px; color:var(--secondary-color);">----</div>
+                        
+                        <!-- Input Field untuk mengetik -->
+                        <div style="margin-bottom:30px;">
+                            <input type="text" id="readWordInput" placeholder="Ketik nama hewan..." style="font-size:32px; padding:20px; border-radius:15px; border:3px solid var(--secondary-color); width:80%; max-width:400px; text-align:center; font-weight:bold; box-shadow:0 5px 15px rgba(78,205,196,0.2);" />
+                        </div>
+                        
+                        <!-- Tombol Aksi -->
+                        <div style="margin-bottom:20px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="listenBtn" style="font-size:18px; padding:16px 28px;">🔊 Dengar Pengucapan</button>
+                            <button class="btn btn-secondary" id="revealBtn" style="font-size:18px; padding:16px 28px;">🔤 Tampilkan Huruf</button>
+                        </div>
+                        
+                        <!-- Tombol Cek Jawaban (Besar dan Mencolok) -->
+                        <div style="margin-bottom:20px;">
+                            <button class="btn btn-success" id="checkReadBtn" style="font-size:20px; padding:18px 40px; background:linear-gradient(135deg, var(--success-color), #52C9B5); border:3px solid white; box-shadow:0 8px 25px rgba(149,225,211,0.4);">
+                                ✓ CEK JAWABAN
+                            </button>
+                        </div>
+                        
+                        <!-- Feedback -->
+                        <div id="readFeedback" style="min-height:60px; margin-top:20px; font-size:20px; font-weight:bold; padding:15px; border-radius:15px;"></div>
+                        
+                        <!-- Tombol Lanjut -->
+                        <div style="margin-top:20px;">
+                            <button class="btn btn-primary" id="readNextBtn" style="font-size:18px; padding:16px 28px;">➡️ Selanjutnya</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress / Level indicator -->
+            <div style="margin-top:18px; text-align:center;">
+                <div style="display:inline-block; width:260px; background:#fff; border-radius:30px; padding:6px;">
+                    <div id="readingProgressBar" style="height:16px; background:linear-gradient(90deg,var(--primary-color),var(--secondary-color)); width:0%; border-radius:30px;"></div>
+                </div>
+                <div id="readingProgressText" style="color:#FFE66D; margin-top:8px;">Level progress: 0%</div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             TAB 2: MENULIS (TRACING)
+             ======================================== -->
+        <div id="menulis" class="tab-content">
+            <h2>✏️ Trace & Tulis Nama Hewan</h2>
+            <p class="intro-text">Ikuti petunjuk untuk menulis nama hewan dengan benar!</p>
+
+            <div class="writing-exercise">
+                <!-- Pilih Hewan -->
+                <div class="animal-selection-write">
+                    <label>Pilih hewan:</label>
+                    <select id="animalSelectWrite" onchange="initWriting()">
+                        <option value="">-- Pilih Hewan --</option>
+                    </select>
+                </div>
+
+                <!-- Reference: Nama Hewan yang Benar -->
+                <div style="text-align: center; margin-bottom: 25px; background: #FFF8DC; padding: 20px; border-radius: 15px; border: 3px solid var(--secondary-color);">
+                    <div style="font-size: 18px; color: var(--dark-color); margin-bottom: 8px; font-weight: bold;">📝 REFERENSI TULIS:</div>
+                    <div id="writingReference" style="font-size: 36px; font-weight: bold; color: var(--primary-color); letter-spacing: 2px;">PILIH HEWAN</div>
+                </div>
+
+                <!-- Instruksi -->
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <div style="font-size: 20px; font-weight: bold; color: var(--dark-color); margin-bottom: 10px;">
+                        ✏️ Tulis nama hewan di area bawah ini:
+                    </div>
+                </div>
+
+                <!-- Canvas untuk Menulis -->
+                <div class="tracing-area" style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <canvas id="tracingCanvas" width="700" height="200" style="border: 3px dashed var(--secondary-color); border-radius: 15px; background: white; cursor: crosshair; display: block; margin: 0 auto; max-width: 100%;"></canvas>
+                    <p class="canvas-text" style="margin-top: 12px; text-align: center; color: #7f8c8d; font-weight: bold;">👆 Klik dan drag untuk menulis di area ini!</p>
+                </div>
+
+                <!-- Petunjuk Tulisan (Text Input Alternative) -->
+                <div style="text-align: center; margin: 20px 0; color: #999; font-size: 14px;">
+                    <span>atau</span>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 16px; font-weight: bold; color: var(--dark-color); margin-bottom: 10px;">
+                        Ketik nama hewan (alternatif):
+                    </div>
+                    <input type="text" id="writingTextInput" placeholder="Ketik nama hewan di sini..." style="font-size: 20px; padding: 15px 20px; border-radius: 15px; border: 3px solid var(--secondary-color); width: 80%; max-width: 500px; text-align: center; font-weight: bold; box-shadow: 0 5px 15px rgba(78,205,196,0.2); transition: all 0.3s ease;" />
+                </div>
+
+                <!-- Buttons -->
+                <div class="writing-buttons">
+                    <button class="btn btn-secondary" onclick="clearCanvas()" style="font-size: 16px; padding: 16px 28px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">🗑️ HAPUS</button>
+                    <button class="btn btn-success" onclick="checkWriting()" style="font-size: 18px; padding: 18px 36px; background: linear-gradient(135deg, var(--success-color), #52C9B5); border: 3px solid white; box-shadow: 0 8px 25px rgba(149,225,211,0.4); font-weight: bold;">✓ PERIKSA JAWABAN</button>
+                </div>
+
+                <!-- Hint / Attempt Counter -->
+                <div id="writingHintArea" style="text-align: center; margin-top: 20px; min-height: 40px;">
+                </div>
+
+                <!-- Feedback Area -->
+                <div id="writingFeedback" style="text-align: center; margin-top: 20px; min-height: 50px;"></div>
+
+                <!-- Button Next Animal -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" id="writingNextBtn" onclick="nextWritingAnimal()" style="display: none; font-size: 16px; padding: 16px 28px;">➡️ Hewan Berikutnya</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             TAB 3: MENGHITUNG (COUNTING)
+             ======================================== -->
+        <div id="menghitung" class="tab-content">
+            <h2>🔢 Menghitung & Operasi Hitung</h2>
+            <p class="intro-text">Belajar menghitung dengan cara yang menyenangkan!</p>
+
+            <!-- Sub-Tab Navigation untuk Menghitung -->
+            <div class="counting-subtabs">
+                <button class="counting-subtab-btn active" onclick="switchCountingTab(event, 'body')">🦵 Hitung Tubuh</button>
+                <button class="counting-subtab-btn" onclick="switchCountingTab(event, 'addition')">➕ Pertambahan</button>
+                <button class="counting-subtab-btn" onclick="switchCountingTab(event, 'subtraction')">➖ Pengurangan</button>
+            </div>
+
+            <!-- ===== SUB-TAB 1: HITUNG TUBUH HEWAN ===== -->
+            <div id="countingBody" class="counting-submodule active">
+                <div class="counting-game">
+                    <div class="counting-animal-card" id="bodyCountingCard">
+                        <!-- Animal dan question akan dimuat oleh JavaScript -->
+                    </div>
+
+                    <div class="counting-options">
+                        <h3 style="font-size:24px; margin-bottom:20px;">Berapa jumlahnya?</h3>
+                        <div class="counting-buttons" id="bodyCountingButtons">
+                            <!-- Buttons akan dimuat oleh JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="counting-feedback" id="bodyCountingFeedback"></div>
+
+                    <div style="text-align: center; margin-top:20px;">
+                        <button class="btn btn-secondary" style="font-size:18px; padding:14px 28px;" onclick="nextBodyCountingQuestion()">➡️ Soal Berikutnya</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SUB-TAB 2: PERTAMBAHAN ===== -->
+            <div id="countingAddition" class="counting-submodule" style="display:none;">
+                <div class="counting-game">
+                    <div style="background:white; border-radius:20px; padding:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+                        <!-- Visualisasi Pertambahan -->
+                        <div style="text-align:center; margin-bottom:30px;">
+                            <div style="display:flex; justify-content:center; gap:30px; align-items:center; flex-wrap:wrap; margin-bottom:30px;">
+                                <!-- Grup Pertama -->
+                                <div id="additionGroup1" style="text-align:center;">
+                                    <div id="additionEmojis1" style="font-size:80px; margin-bottom:15px; line-height:1.2;"></div>
+                                    <div style="font-size:24px; font-weight:bold; color:var(--dark-color);" id="additionNum1">3</div>
+                                </div>
+
+                                <!-- Tanda Plus -->
+                                <div style="font-size:60px; font-weight:bold; color:var(--primary-color); margin-bottom:20px;">+</div>
+
+                                <!-- Grup Kedua -->
+                                <div id="additionGroup2" style="text-align:center;">
+                                    <div id="additionEmojis2" style="font-size:80px; margin-bottom:15px; line-height:1.2;"></div>
+                                    <div style="font-size:24px; font-weight:bold; color:var(--dark-color);" id="additionNum2">2</div>
+                                </div>
+
+                                <!-- Tanda Sama Dengan -->
+                                <div style="font-size:60px; font-weight:bold; color:var(--secondary-color); margin-bottom:20px;">=</div>
+
+                                <!-- Tanda Tanya -->
+                                <div style="font-size:50px; font-weight:bold; color:#FFE66D;">?</div>
+                            </div>
+
+                            <!-- Pertanyaan -->
+                            <div style="font-size:28px; font-weight:bold; color:var(--dark-color); margin-bottom:30px;" id="additionQuestion">
+                                Berapa total semuanya?
+                            </div>
+
+                            <!-- Pilihan Jawaban -->
+                            <div class="counting-buttons" id="additionButtons">
+                                <!-- Buttons akan dimuat oleh JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="counting-feedback" id="additionFeedback"></div>
+
+                        <div style="text-align: center; margin-top:20px;">
+                            <button class="btn btn-secondary" style="font-size:18px; padding:14px 28px;" onclick="nextAdditionQuestion()">➡️ Soal Berikutnya</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SUB-TAB 3: PENGURANGAN ===== -->
+            <div id="countingSubtraction" class="counting-submodule" style="display:none;">
+                <div class="counting-game">
+                    <div style="background:white; border-radius:20px; padding:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+                        <!-- Visualisasi Pengurangan -->
+                        <div style="text-align:center; margin-bottom:30px;">
+                            <!-- Pertanyaan Soal -->
+                            <div style="font-size:24px; font-weight:bold; color:var(--dark-color); margin-bottom:30px; background:#FFF8DC; padding:20px; border-radius:15px;" id="subtractionQuestion">
+                                Ada 5 burung, 2 terbang pergi. Berapa yang tersisa?
+                            </div>
+
+                            <!-- Awal - Hewan Lengkap -->
+                            <div style="margin-bottom:30px;">
+                                <div style="font-size:18px; font-weight:bold; color:var(--secondary-color); margin-bottom:10px;">Awalnya:</div>
+                                <div id="subtractionInitial" style="font-size:80px; line-height:1.2; margin-bottom:15px;"></div>
+                                <div style="font-size:20px; font-weight:bold; color:var(--dark-color);" id="subtractionInitialNum">5</div>
+                            </div>
+
+                            <!-- Dikurangi - Hewan yang Hilang -->
+                            <div style="margin-bottom:30px; padding:20px; background:#FFE4E4; border-radius:15px;">
+                                <div style="font-size:18px; font-weight:bold; color:var(--primary-color); margin-bottom:10px;">Dikurangi:</div>
+                                <div id="subtractionRemoved" style="font-size:70px; line-height:1.2; margin-bottom:15px; opacity:0.5;"></div>
+                                <div style="font-size:20px; font-weight:bold; color:var(--primary-color);" id="subtractionRemovedNum">2</div>
+                            </div>
+
+                            <!-- Hasil - Sisa -->
+                            <div style="font-size:40px; font-weight:bold; color:var(--dark-color); margin-bottom:30px;">
+                                Sisa: <span style="color:var(--secondary-color);">?</span>
+                            </div>
+
+                            <!-- Pilihan Jawaban -->
+                            <div class="counting-buttons" id="subtractionButtons">
+                                <!-- Buttons akan dimuat oleh JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="counting-feedback" id="subtractionFeedback"></div>
+
+                        <div style="text-align: center; margin-top:20px;">
+                            <button class="btn btn-secondary" style="font-size:18px; padding:14px 28px;" onclick="nextSubtractionQuestion()">➡️ Soal Berikutnya</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio elements -->
+    <audio id="correctSound" preload="auto">
+        <source src="assets/sounds/correct.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="wrongSound" preload="auto">
+        <source src="assets/sounds/wrong.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/calistung.js"></script>
+    <script>
+        (function(){
+            // Reading module uses calistungAnimals from js/calistung.js
+            const lvl1Btn = document.getElementById('readLevel1Btn');
+            const lvl2Btn = document.getElementById('readLevel2Btn');
+            const lvl3Btn = document.getElementById('readLevel3Btn');
+
+            const lvl1View = document.getElementById('readingLevel1');
+            const lvl2View = document.getElementById('readingLevel2');
+            const lvl3View = document.getElementById('readingLevel3');
+
+            const checkMatchBtn = document.getElementById('checkMatchBtn');
+
+            // Level2 elements
+            let currentSpell = null;
+            const spellImage = document.getElementById('spellImage');
+            const spellSlots = document.getElementById('spellSlots');
+            const spellLetters = document.getElementById('spellLetters');
+            const spellRetryBtn = document.getElementById('spellRetryBtn');
+            const spellNextBtn = document.getElementById('spellNextBtn');
+
+            // Level3 elements
+            let currentRead = null;
+            const readImage = document.getElementById('readImage');
+            const readWordSlots = document.getElementById('readWordSlots');
+            const listenBtn = document.getElementById('listenBtn');
+            const revealBtn = document.getElementById('revealBtn');
+            const readNextBtn = document.getElementById('readNextBtn');
+            const readFeedback = document.getElementById('readFeedback');
+
+            // Progress
+            let progressPoints = 0;
+            const progressBar = document.getElementById('readingProgressBar');
+            const progressText = document.getElementById('readingProgressText');
+
+            function switchReadLevel(level){
+                lvl1Btn.classList.toggle('active', level===1);
+                lvl2Btn.classList.toggle('active', level===2);
+                lvl3Btn.classList.toggle('active', level===3);
+
+                lvl1View.style.display = level===1? 'block':'none';
+                lvl2View.style.display = level===2? 'block':'none';
+                lvl3View.style.display = level===3? 'block':'none';
+
+                if(level===1){ initMatching(); }
+                if(level===2){ startSpell(); }
+                if(level===3){ startRead(); }
+            }
+
+            lvl1Btn.addEventListener('click', ()=>switchReadLevel(1));
+            lvl2Btn.addEventListener('click', ()=>switchReadLevel(2));
+            lvl3Btn.addEventListener('click', ()=>switchReadLevel(3));
+
+            // wire existing check button
+            if(checkMatchBtn){ checkMatchBtn.addEventListener('click', ()=>{ checkMatching(); updateProgress(true); }); }
+
+            // ---------- LEVEL 2: SPELL ----------
+            function startSpell(){
+                pickSpellAnimal();
+            }
+
+            function pickSpellAnimal(){
+                const pool = [...calistungAnimals];
+                currentSpell = pool[Math.floor(Math.random()*pool.length)];
+                renderSpell();
+            }
+
+            function renderSpell(){
+                if(!currentSpell) return;
+                spellImage.textContent = currentSpell.emoji;
+                const name = currentSpell.name.toUpperCase();
+                const letters = name.replace(/\s+/g,'').split('');
+                spellSlots.innerHTML = '';
+                letters.forEach(_ => {
+                    const slot = document.createElement('div');
+                    slot.style.cssText = 'width:36px;height:46px;border-radius:8px;background:#fff;border:2px dashed #ddd;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;';
+                    slot.textContent = '';
+                    spellSlots.appendChild(slot);
+                });
+
+                // create shuffled letters with some extra decoys
+                const shuffled = shuffleArray(letters.concat(...letters.splice(0, Math.min(2, letters.length)))).sort(()=>Math.random()-0.5);
+                spellLetters.innerHTML = '';
+                shuffled.forEach((ch, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn btn-secondary';
+                    btn.style.minWidth='48px';
+                    btn.style.fontSize='20px';
+                    btn.textContent = ch;
+                    btn.dataset.letter = ch;
+                    btn.addEventListener('click', ()=>onSpellLetterClick(btn));
+                    spellLetters.appendChild(btn);
+                });
+            }
+
+            function onSpellLetterClick(btn){
+                const emptySlot = Array.from(spellSlots.children).find(s=>s.textContent==='');
+                if(!emptySlot) return;
+                emptySlot.textContent = btn.dataset.letter;
+                btn.disabled = true;
+
+                // check completion
+                const filled = Array.from(spellSlots.children).map(s=>s.textContent).join('');
+                const target = currentSpell.name.replace(/\s+/g,'').toUpperCase();
+                if(filled.length === target.length){
+                    if(filled === target){
+                        // success
+                        playSound('correct');
+                        showSmallSuccess('🎉 Bagus! Kamu mengeja dengan benar!');
+                        updateProgress(true);
+                    } else {
+                        playSound('wrong');
+                        showSmallError('❌ Coba lagi!');
+                    }
+                }
+            }
+
+            spellRetryBtn && spellRetryBtn.addEventListener('click', ()=>{
+                renderSpell();
+            });
+            spellNextBtn && spellNextBtn.addEventListener('click', ()=>{
+                pickSpellAnimal();
+            });
+
+            // ---------- LEVEL 3: READ ----------
+            function startRead(){
+                pickReadAnimal();
+            }
+
+            function pickReadAnimal(){
+                const pool = [...calistungAnimals];
+                currentRead = pool[Math.floor(Math.random()*pool.length)];
+                renderRead();
+            }
+
+            function renderRead(){
+                if(!currentRead) return;
+                readImage.textContent = currentRead.emoji;
+                readWordSlots.textContent = '_ '.repeat(currentRead.name.replace(/\s+/g,'').length).trim();
+                readFeedback.textContent = '';
+            }
+
+            listenBtn && listenBtn.addEventListener('click', ()=>{
+                if(!currentRead) return;
+                speakText(currentRead.name);
+            });
+
+            revealBtn && revealBtn.addEventListener('click', ()=>{
+                if(!currentRead) return;
+                revealWordLetters(currentRead.name);
+            });
+
+            readNextBtn && readNextBtn.addEventListener('click', ()=>{
+                pickReadAnimal();
+            });
+
+            function revealWordLetters(name){
+                const letters = name.replace(/\s+/g,'').split('');
+                let i=0;
+                readWordSlots.textContent='';
+                const interval = setInterval(()=>{
+                    readWordSlots.textContent += letters[i] + ' ';
+                    i++;
+                    if(i>=letters.length) clearInterval(interval);
+                }, 400);
+                playSound('correct');
+            }
+
+            // ---------- HELPERS ----------
+            function showSmallSuccess(msg){
+                const el = document.createElement('div');
+                el.style.cssText = 'position:fixed;left:50%;top:30%;transform:translateX(-50%);background:var(--success-color);color:#fff;padding:16px 28px;border-radius:14px;font-size:18px;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,0.2);';
+                el.textContent = msg;
+                document.body.appendChild(el);
+                setTimeout(()=>el.remove(),1400);
+            }
+
+            function showSmallError(msg){
+                const el = document.createElement('div');
+                el.style.cssText = 'position:fixed;left:50%;top:30%;transform:translateX(-50%);background:#FF6B6B;color:#fff;padding:16px 28px;border-radius:14px;font-size:18px;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,0.2);';
+                el.textContent = msg;
+                document.body.appendChild(el);
+                setTimeout(()=>el.remove(),1400);
+            }
+
+            function createConfetti(){
+                for(let i=0;i<12;i++){
+                    const confetti = document.createElement('div');
+                    confetti.textContent = ['🎉','✨','🌟','🎊'][Math.floor(Math.random()*4)];
+                    confetti.style.cssText = `position:fixed;left:${Math.random()*90+5}vw;top:-30px;font-size:${Math.random()*24+18}px;opacity:1;transition:transform 1.2s ease-out, opacity 1.2s ease-out;`;
+                    document.body.appendChild(confetti);
+                    requestAnimationFrame(()=>{
+                        confetti.style.transform = `translateY(${window.innerHeight + 60}px) rotate(${Math.random()*720-360}deg)`;
+                        confetti.style.opacity = '0';
+                    });
+                    setTimeout(()=>confetti.remove(),1400);
+                }
+            }
+
+            function speakText(text){
+                if('speechSynthesis' in window){
+                    const ut = new SpeechSynthesisUtterance(text);
+                    ut.lang = 'id-ID';
+                    window.speechSynthesis.cancel();
+                    window.speechSynthesis.speak(ut);
+                } else {
+                    // fallback: play correct sound
+                    playSound('correct');
+                }
+            }
+
+            function shuffleArray(arr){
+                const a = [...arr];
+                for(let i=a.length-1;i>0;i--){
+                    const j=Math.floor(Math.random()*(i+1));
+                    [a[i],a[j]]=[a[j],a[i]];
+                }
+                return a;
+            }
+
+            function updateProgress(success){
+                if(success) progressPoints += 10;
+                const pct = Math.min(100, progressPoints);
+                progressBar.style.width = pct + '%';
+                progressText.textContent = `Level progress: ${pct}%`;
+            }
+
+            // ---------- LEVEL 3: CHECK ANSWER ----------
+            const checkReadBtn = document.getElementById('checkReadBtn');
+            const readWordInput = document.getElementById('readWordInput');
+            
+            checkReadBtn && checkReadBtn.addEventListener('click', ()=>{
+                if(!currentRead) return;
+                
+                const userAnswer = readWordInput.value.trim().toUpperCase();
+                const correctAnswer = currentRead.name.toUpperCase();
+                
+                if(!userAnswer){
+                    showSmallError('❌ Silakan ketik nama hewan terlebih dahulu!');
+                    return;
+                }
+                
+                if(userAnswer === correctAnswer){
+                    playSound('correct');
+                    showSmallSuccess(`🎉 Sempurna! ${currentRead.name} benar!`);
+                    updateProgress(true);
+                    setTimeout(()=>{
+                        readWordInput.value = '';
+                        pickReadAnimal();
+                    }, 1500);
+                } else {
+                    playSound('wrong');
+                    showSmallError(`❌ Salah! Coba lagi. Hint: ${correctAnswer}`);
+                    readWordInput.value = '';
+                }
+            });
+            
+            // Allow Enter key to check answer
+            readWordInput && readWordInput.addEventListener('keypress', (e)=>{
+                if(e.key === 'Enter'){
+                    checkReadBtn.click();
+                }
+            });
+
+            // ============================================================
+            // ========== COUNTING MODULE - Menghitung ==================
+            // ============================================================
+
+            // State untuk counting
+            let countingState = {
+                bodyQuestion: null,
+                bodyIndex: 0,
+                additionQuestion: null,
+                subtractionQuestion: null,
+                selectedAnswer: null
+            };
+
+            // Data untuk counting berdasarkan tubuh hewan
+            const bodyPartCountingData = [
+                { animal: '🦁', name: 'Singa', parts: { kaki: 4, telinga: 2, mata: 2 } },
+                { animal: '🐘', name: 'Gajah', parts: { kaki: 4, telinga: 2, mata: 2 } },
+                { animal: '🐯', name: 'Harimau', parts: { kaki: 4, telinga: 2, mata: 2 } },
+                { animal: '🦒', name: 'Jerapah', parts: { kaki: 4, telinga: 2, mata: 2 } },
+                { animal: '🐺', name: 'Serigala', parts: { kaki: 4, telinga: 2, mata: 2 } },
+                { animal: '🐴', name: 'Kuda', parts: { kaki: 4, telinga: 2, mata: 2 } },
+                { animal: '🐮', name: 'Sapi', parts: { kaki: 4, telinga: 2, mata: 2 } },
+                { animal: '🐷', name: 'Babi', parts: { kaki: 4, telinga: 2, mata: 2 } },
+                { animal: '🐑', name: 'Domba', parts: { kaki: 4, telinga: 2, mata: 2 } },
+                { animal: '🐢', name: 'Kura-kura', parts: { kaki: 4, telinga: 0, mata: 2 } },
+                { animal: '🐦', name: 'Burung', parts: { kaki: 2, telinga: 0, mata: 2 } },
+                { animal: '🦆', name: 'Itik', parts: { kaki: 2, telinga: 0, mata: 2 } }
+            ];
+
+            // Data untuk pertambahan
+            const additionAnimals = [
+                { name: 'Ikan', emoji: '🐠', maxNum: 7 },
+                { name: 'Burung', emoji: '🐦', maxNum: 6 },
+                { name: 'Kupu-kupu', emoji: '🦋', maxNum: 8 },
+                { name: 'Bintang Laut', emoji: '⭐', maxNum: 7 },
+                { name: 'Lebah', emoji: '🐝', maxNum: 8 }
+            ];
+
+            // Data untuk pengurangan
+            const subtractionAnimals = [
+                { name: 'Burung', emoji: '🐦', maxNum: 8 },
+                { name: 'Ikan', emoji: '🐠', maxNum: 7 },
+                { name: 'Kupu-kupu', emoji: '🦋', maxNum: 8 },
+                { name: 'Lebah', emoji: '🐝', maxNum: 7 },
+                { name: 'Kepik', emoji: '🐞', maxNum: 6 }
+            ];
+
+            // ===== SWITCH COUNTING TAB =====
+            function switchCountingTab(e, tab){
+                if(typeof e === 'string'){
+                    tab = e;
+                    e = window.event;
+                }
+
+                // Hide all submodules
+                document.querySelectorAll('.counting-submodule').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.counting-subtab-btn').forEach(el => el.classList.remove('active'));
+
+                // Show selected tab
+                const tabMap = { body: 'Body', addition: 'Addition', subtraction: 'Subtraction' };
+                const selectedElement = document.getElementById('counting' + tabMap[tab]);
+                if(selectedElement) selectedElement.style.display = 'block';
+
+                const targetButton = e?.currentTarget || e?.target || window.event?.target;
+                if(targetButton && targetButton.classList) targetButton.classList.add('active');
+
+                // Initialize selected module
+                if(tab === 'body') initBodyCounting();
+                else if(tab === 'addition') initAdditionCounting();
+                else if(tab === 'subtraction') initSubtractionCounting();
+            }
+
+            // ===== 1. HITUNG TUBUH HEWAN =====
+            function initBodyCounting(){
+                nextBodyCountingQuestion();
+            }
+
+            function nextBodyCountingQuestion(){
+                const data = bodyPartCountingData[Math.floor(Math.random() * bodyPartCountingData.length)];
+                const partKeys = Object.keys(data.parts);
+                const partName = partKeys[Math.floor(Math.random() * partKeys.length)];
+                const count = data.parts[partName];
+
+                countingState.bodyQuestion = { data, partName, count };
+                renderBodyCounting();
+            }
+
+            function renderBodyCounting(){
+                const q = countingState.bodyQuestion;
+                const { data, partName, count } = q;
+
+                const partEmoji = {
+                    kaki: '🦵',
+                    telinga: '👂',
+                    mata: '👀'
+                }[partName] || '❓';
+
+                document.getElementById('bodyCountingCard').innerHTML = `
+                    <div style="text-align:center;">
+                        <div style="font-size:120px; margin-bottom:15px;">${data.animal}</div>
+                        <div style="font-size:28px; font-weight:bold; color:white; margin-bottom:10px;">${data.name}</div>
+                        <div style="font-size:32px; font-weight:bold; color:#FFE66D;">Berapa ${partName}nya?</div>
+                    </div>
+                `;
+
+                const buttonsDiv = document.getElementById('bodyCountingButtons');
+                buttonsDiv.innerHTML = '';
+                countingState.selectedAnswer = null;
+
+                // Generate options
+                const options = new Set([count]);
+                while(options.size < 4){
+                    const num = Math.floor(Math.random() * 6) + 1;
+                    if(num !== count) options.add(num);
+                }
+
+                [...options].sort(() => Math.random() - 0.5).forEach(num => {
+                    const btn = document.createElement('button');
+                    btn.className = 'count-btn';
+                    btn.textContent = num;
+                    btn.style.fontSize = '32px';
+                    btn.style.padding = '20px';
+                    btn.onclick = () => checkBodyAnswer(num, btn);
+                    buttonsDiv.appendChild(btn);
+                });
+
+                document.getElementById('bodyCountingFeedback').innerHTML = '';
+            }
+
+            function checkBodyAnswer(answer, btn){
+                const correct = answer === countingState.bodyQuestion.count;
+                const feedbackEl = document.getElementById('bodyCountingFeedback');
+
+                document.querySelectorAll('#bodyCountingButtons .count-btn').forEach(b => b.disabled = true);
+
+                if(correct){
+                    btn.style.background = 'var(--success-color)';
+                    btn.style.color = 'white';
+                    feedbackEl.className = 'counting-feedback correct';
+                    feedbackEl.textContent = '🎉 Benar! Jawaban kamu tepat!';
+                    playSound('correct');
+                    showSmallSuccess('🎉 Benar! Jawaban kamu tepat!');
+                    createConfetti();
+                    updateProgress(true);
+                } else {
+                    btn.style.background = '#FF6B6B';
+                    btn.style.color = 'white';
+                    feedbackEl.className = 'counting-feedback wrong';
+                    feedbackEl.textContent = `❌ Salah! Jawaban yang benar adalah ${countingState.bodyQuestion.count}`;
+                    playSound('wrong');
+                    showSmallError(`❌ Salah! Jawaban yang benar adalah ${countingState.bodyQuestion.count}`);
+                }
+            }
+
+            // ===== 2. PERTAMBAHAN =====
+            function initAdditionCounting(){
+                nextAdditionQuestion();
+            }
+
+            function nextAdditionQuestion(){
+                const animal = additionAnimals[Math.floor(Math.random() * additionAnimals.length)];
+                const num1 = Math.floor(Math.random() * animal.maxNum) + 1;
+                const num2 = Math.floor(Math.random() * animal.maxNum) + 1;
+                const answer = num1 + num2;
+
+                countingState.additionQuestion = { animal, num1, num2, answer };
+                renderAddition();
+            }
+
+            function renderAddition(){
+                const q = countingState.additionQuestion;
+                const { animal, num1, num2 } = q;
+
+                // Render emojis grup 1
+                let emojis1 = '';
+                for(let i = 0; i < num1; i++) emojis1 += animal.emoji;
+                document.getElementById('additionEmojis1').textContent = emojis1;
+                document.getElementById('additionNum1').textContent = num1;
+
+                // Render emojis grup 2
+                let emojis2 = '';
+                for(let i = 0; i < num2; i++) emojis2 += animal.emoji;
+                document.getElementById('additionEmojis2').textContent = emojis2;
+                document.getElementById('additionNum2').textContent = num2;
+
+                // Update question
+                document.getElementById('additionQuestion').textContent = `Berapa total ${animal.name.toLowerCase()} semuanya?`;
+
+                // Render buttons
+                const buttonsDiv = document.getElementById('additionButtons');
+                buttonsDiv.innerHTML = '';
+                countingState.selectedAnswer = null;
+
+                const options = new Set([q.answer]);
+                while(options.size < 4){
+                    const num = Math.floor(Math.random() * 15) + 1;
+                    if(num !== q.answer) options.add(num);
+                }
+
+                [...options].sort(() => Math.random() - 0.5).forEach(num => {
+                    const btn = document.createElement('button');
+                    btn.className = 'count-btn';
+                    btn.textContent = num;
+                    btn.style.fontSize = '32px';
+                    btn.style.padding = '20px';
+                    btn.onclick = () => checkAdditionAnswer(num, btn);
+                    buttonsDiv.appendChild(btn);
+                });
+
+                document.getElementById('additionFeedback').innerHTML = '';
+            }
+
+            function checkAdditionAnswer(answer, btn){
+                const correct = answer === countingState.additionQuestion.answer;
+                const feedbackEl = document.getElementById('additionFeedback');
+
+                document.querySelectorAll('#additionButtons .count-btn').forEach(b => b.disabled = true);
+
+                if(correct){
+                    btn.style.background = 'var(--success-color)';
+                    btn.style.color = 'white';
+                    feedbackEl.className = 'counting-feedback correct';
+                    feedbackEl.textContent = '🎉 Benar! Hitunganmu tepat!';
+                    playSound('correct');
+                    showSmallSuccess('🎉 Benar! Hitunganmu tepat!');
+                    createConfetti();
+                    updateProgress(true);
+                } else {
+                    btn.style.background = '#FF6B6B';
+                    btn.style.color = 'white';
+                    feedbackEl.className = 'counting-feedback wrong';
+                    feedbackEl.textContent = `❌ Salah! Jawaban yang benar adalah ${countingState.additionQuestion.answer}`;
+                    playSound('wrong');
+                    showSmallError(`❌ Salah! Jawaban yang benar adalah ${countingState.additionQuestion.answer}`);
+                }
+            }
+
+            // ===== 3. PENGURANGAN =====
+            function initSubtractionCounting(){
+                nextSubtractionQuestion();
+            }
+
+            function nextSubtractionQuestion(){
+                const animal = subtractionAnimals[Math.floor(Math.random() * subtractionAnimals.length)];
+                const total = Math.floor(Math.random() * animal.maxNum) + 3;
+                const removed = Math.floor(Math.random() * (total - 1)) + 1;
+                const answer = total - removed;
+
+                countingState.subtractionQuestion = { animal, total, removed, answer };
+                renderSubtraction();
+            }
+
+            function renderSubtraction(){
+                const q = countingState.subtractionQuestion;
+                const { animal, total, removed, answer } = q;
+
+                // Render pertanyaan
+                document.getElementById('subtractionQuestion').textContent = 
+                    `Ada ${total} ${animal.name.toLowerCase()}, ${removed} ${removed > 1 ? 'terbang pergi' : 'terbang pergi'}. Berapa yang tersisa?`;
+
+                // Render awal
+                let initialEmojis = '';
+                for(let i = 0; i < total; i++) initialEmojis += animal.emoji;
+                document.getElementById('subtractionInitial').textContent = initialEmojis;
+                document.getElementById('subtractionInitialNum').textContent = total;
+
+                // Render dikurangi
+                let removedEmojis = '';
+                for(let i = 0; i < removed; i++) removedEmojis += animal.emoji;
+                document.getElementById('subtractionRemoved').textContent = removedEmojis;
+                document.getElementById('subtractionRemovedNum').textContent = removed;
+
+                // Render buttons
+                const buttonsDiv = document.getElementById('subtractionButtons');
+                buttonsDiv.innerHTML = '';
+                countingState.selectedAnswer = null;
+
+                const options = new Set([answer]);
+                while(options.size < 4){
+                    const num = Math.floor(Math.random() * total) + 0;
+                    if(num !== answer && num < total) options.add(num);
+                }
+
+                [...options].sort(() => Math.random() - 0.5).forEach(num => {
+                    const btn = document.createElement('button');
+                    btn.className = 'count-btn';
+                    btn.textContent = num;
+                    btn.style.fontSize = '32px';
+                    btn.style.padding = '20px';
+                    btn.onclick = () => checkSubtractionAnswer(num, btn);
+                    buttonsDiv.appendChild(btn);
+                });
+
+                document.getElementById('subtractionFeedback').innerHTML = '';
+            }
+
+            function checkSubtractionAnswer(answer, btn){
+                const correct = answer === countingState.subtractionQuestion.answer;
+                const feedbackEl = document.getElementById('subtractionFeedback');
+
+                document.querySelectorAll('#subtractionButtons .count-btn').forEach(b => b.disabled = true);
+
+                if(correct){
+                    btn.style.background = 'var(--success-color)';
+                    btn.style.color = 'white';
+                    feedbackEl.className = 'counting-feedback correct';
+                    feedbackEl.textContent = '🎉 Benar! Sisa menghitung tepat!';
+                    playSound('correct');
+                    showSmallSuccess('🎉 Benar! Sisa menghitung tepat!');
+                    createConfetti();
+                    updateProgress(true);
+                } else {
+                    btn.style.background = '#FF6B6B';
+                    btn.style.color = 'white';
+                    feedbackEl.className = 'counting-feedback wrong';
+                    feedbackEl.textContent = `❌ Salah! Jawaban yang benar adalah ${countingState.subtractionQuestion.answer}`;
+                    playSound('wrong');
+                    showSmallError(`❌ Salah! Jawaban yang benar adalah ${countingState.subtractionQuestion.answer}`);
+                }
+            }
+
+            // Expose counting controls for inline onclick handlers
+            window.switchCountingTab = switchCountingTab;
+            window.nextBodyCountingQuestion = nextBodyCountingQuestion;
+            window.nextAdditionQuestion = nextAdditionQuestion;
+            window.nextSubtractionQuestion = nextSubtractionQuestion;
+
+            // ===== COUNTING INIT =====
+            initBodyCounting();
+
+            // Init default
+            switchReadLevel(1);
+        })();
+    </script>
+    <footer class="footer">
+        <p>🎓 Belajar Sambil Bermain untuk Anak Cerdas 🎓</p>
+    </footer>
+</body>
+</html>

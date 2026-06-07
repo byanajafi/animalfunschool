@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis & Game - Edukasi Anak</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <style>
+        /* ========================================
+           QUIZ PAGE STYLING
+           ======================================== */
+
+        .quiz-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+            min-height: calc(100vh - 300px);
+        }
+
+        /* Game Menu */
+        .games-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 3px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+            border-color: var(--secondary-color);
+        }
+
+        .game-icon {
+            font-size: 60px;
+            margin-bottom: 12px;
+            animation: bounce 1.5s ease infinite;
+        }
+
+        .game-card h3 {
+            color: var(--dark-color);
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .game-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Quiz Screen */
+        .quiz-screen {
+            display: none;
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .quiz-screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Quiz Header */
+        .quiz-header {
+            margin-bottom: 30px;
+        }
+
+        .quiz-title {
+            font-size: 24px;
+            color: var(--dark-color);
+            margin: 0 0 10px 0;
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--primary-color);
+            transform: scale(1.3);
+        }
+
+        .progress-dot.completed {
+            background: var(--success-color);
+        }
+
+        .score-display {
+            font-size: 20px;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Game 1: Sound Guessing */
+        .sound-icon {
+            font-size: 80px;
+            margin: 20px 0;
+            animation: pulse 1.5s ease infinite;
+        }
+
+        .play-button {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            font-size: 60px;
+            cursor: pointer;
+            margin: 20px auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .play-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Game 2-3-4: Options/Choices */
+        .choices-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .choice-btn {
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--secondary-color);
+            background: #f0fffe;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.2);
+        }
+
+        .choice-btn.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .choice-btn.correct {
+            background: var(--success-color);
+            color: var(--dark-color);
+            border-color: var(--success-color);
+            animation: pulse 0.6s ease;
+        }
+
+        .choice-btn.wrong {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+            animation: shake 0.5s ease;
+        }
+
+        .choice-emoji {
+            font-size: 40px;
+        }
+
+        .choice-text {
+            font-size: 16px;
+        }
+
+        /* Game 2: Name Guessing */
+        .animal-image-container {
+            margin: 20px 0;
+        }
+
+        .animal-image {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            object-fit: contain;
+            margin: 0 auto;
+        }
+
+        .animal-emoji-large {
+            font-size: 100px;
+            margin: 20px 0;
+            animation: bounce 1.5s ease infinite;
+        }
+
+        /* Game 3: Counting */
+        .counting-question {
+            font-size: 24px;
+            color: var(--dark-color);
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .number-choices {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .number-btn {
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .number-btn:hover {
+            border-color: var(--secondary-color);
+            background: #f0fffe;
+            transform: scale(1.05);
+        }
+
+        .number-btn.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .number-btn.correct {
+            background: var(--success-color);
+            color: var(--dark-color);
+            border-color: var(--success-color);
+        }
+
+        .number-btn.wrong {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+            animation: shake 0.5s ease;
+        }
+
+        /* Game 4: Memory Match */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+        }
+
+        .memory-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .memory-card.flipped {
+            background: white;
+            border: 3px solid var(--secondary-color);
+        }
+
+        .memory-card.matched {
+            background: var(--success-color);
+            cursor: default;
+        }
+
+        .memory-card.matched:hover {
+            transform: scale(1);
+            box-shadow: none;
+        }
+
+        /* Result Screen */
+        .result-screen {
+            display: none;
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: slideUp 0.5s ease;
+        }
+
+        .result-screen.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-icon {
+            font-size: 100px;
+            margin: 20px 0;
+            animation: bounce 0.8s ease infinite;
+        }
+
+        .result-title {
+            font-size: 28px;
+            color: var(--dark-color);
+            margin: 15px 0;
+        }
+
+        .stars-display {
+            font-size: 60px;
+            margin: 20px 0;
+            letter-spacing: 10px;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .result-score {
+            font-size: 24px;
+            color: var(--secondary-color);
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .result-message {
+            font-size: 16px;
+            color: #666;
+            margin: 20px 0;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn-again {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-again:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-menu {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-menu:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .next-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Animations */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 0 10px;
+            }
+
+            .games-menu {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .quiz-screen {
+                padding: 25px;
+            }
+
+            .choices-container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .play-button {
+                width: 100px;
+                height: 100px;
+                font-size: 50px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-again, .btn-menu {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-screen {
+                padding: 15px;
+            }
+
+            .quiz-title {
+                font-size: 20px;
+            }
+
+            .animal-emoji-large {
+                font-size: 80px;
+            }
+
+            .play-button {
+                width: 90px;
+                height: 90px;
+                font-size: 45px;
+            }
+
+            .choice-btn {
+                padding: 15px;
+                min-height: 80px;
+            }
+
+            .choice-emoji {
+                font-size: 35px;
+            }
+
+            .choice-text {
+                font-size: 14px;
+            }
+
+            .counting-question {
+                font-size: 20px;
+            }
+
+            .number-choices {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .number-btn {
+                font-size: 24px;
+                padding: 12px;
+            }
+
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .result-title {
+                font-size: 24px;
+            }
+
+            .stars-display {
+                font-size: 50px;
+                letter-spacing: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background dengan animasi -->
+    <div class="background-animation"></div>
+
+    <nav class="nav-bar" aria-label="Navigasi utama">
+        <a href="index.html" class="nav-item"><span class="nav-emoji">🏠</span> Home</a>
+        <a href="belajar-hewan.html" class="nav-item"><span class="nav-emoji">🦁</span> Belajar Hewan</a>
+        <a href="calistung.html" class="nav-item"><span class="nav-emoji">✏️</span> Calistung</a>
+        <a href="kuis.html" class="nav-item active"><span class="nav-emoji">🎮</span> Kuis & Game</a>
+    </nav>
+
+    <header class="page-header">
+        <div class="mascot-container">
+            <div class="mascot">🎮</div>
+            <div>
+                <h1 class="page-title">Kuis & Game</h1>
+                <p class="subtitle">Tantangan Seru untuk Anak Hebat</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-action-row">
+        <a href="index.html" class="btn btn-secondary back-home-btn"><span class="nav-emoji">🏠</span> Kembali ke Home</a>
+    </div>
+
+    <!-- Main Container -->
+    <div class="quiz-container">
+        <!-- Games Menu -->
+        <div id="gamesMenu" class="active">
+            <div style="text-align: center; margin: 30px 0;">
+                <h2 style="font-size: 32px; color: var(--dark-color); margin: 0;">🎮 Kuis & Game Seru</h2>
+                <p style="font-size: 18px; color: #666; margin: 10px 0;">Pilih game yang ingin kamu mainkan!</p>
+            </div>
+
+            <div class="games-menu">
+                <!-- Game 1: Sound Guessing -->
+                <div class="game-card">
+                    <div class="game-icon">🔊</div>
+                    <h3>Tebak Suara Hewan</h3>
+                    <p>Dengarkan suara dan pilih hewan yang benar</p>
+                    <button class="start-btn" onclick="startGame('soundGuess')">🎮 Mainkan</button>
+                </div>
+
+                <!-- Game 2: Name Guessing -->
+                <div class="game-card">
+                    <div class="game-icon">🎯</div>
+                    <h3>Tebak Nama Hewan</h3>
+                    <p>Lihat gambar dan pilih nama yang tepat</p>
+                    <button class="start-btn" onclick="startGame('nameGuess')">🎮 Mainkan</button>
+                </div>
+
+                <!-- Game 3: Counting -->
+                <div class="game-card">
+                    <div class="game-icon">🦵</div>
+                    <h3>Hitung Kaki Hewan</h3>
+                    <p>Lihat gambar dan hitung berapa kaki hewan</p>
+                    <button class="start-btn" onclick="startGame('counting')">🎮 Mainkan</button>
+                </div>
+
+                <!-- Game 4: Memory Match -->
+                <div class="game-card">
+                    <div class="game-icon">🧠</div>
+                    <h3>Memory Match</h3>
+                    <p>Temukan pasangan gambar hewan yang sama</p>
+                    <button class="start-btn" onclick="startGame('memory')">🎮 Mainkan</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game 1: Sound Guessing Screen -->
+        <div id="soundGuessScreen" class="quiz-screen">
+            <div class="quiz-header">
+                <h2 class="quiz-title">🔊 Tebak Suara Hewan</h2>
+                <div class="quiz-progress" id="soundProgress"></div>
+                <div class="score-display">Skor: <span id="soundScore">0</span>/5</div>
+            </div>
+            <div class="sound-icon">🎧</div>
+            <button class="play-button" onclick="playSoundGuessAudio()">▶️</button>
+            <p style="color: #999; font-size: 14px;">Klik tombol untuk mendengarkan</p>
+            <div class="choices-container" id="soundChoices"></div>
+        </div>
+
+        <!-- Game 2: Name Guessing Screen -->
+        <div id="nameGuessScreen" class="quiz-screen">
+            <div class="quiz-header">
+                <h2 class="quiz-title">🎯 Tebak Nama Hewan</h2>
+                <div class="quiz-progress" id="nameProgress"></div>
+                <div class="score-display">Skor: <span id="nameScore">0</span>/5</div>
+            </div>
+            <div class="animal-emoji-large" id="nameAnimalEmoji">🦁</div>
+            <div class="choices-container" id="nameChoices"></div>
+        </div>
+
+        <!-- Game 3: Counting Screen -->
+        <div id="countingScreen" class="quiz-screen">
+            <div class="quiz-header">
+                <h2 class="quiz-title">🦵 Hitung Kaki Hewan</h2>
+                <div class="quiz-progress" id="countingProgress"></div>
+                <div class="score-display">Skor: <span id="countingScore">0</span>/5</div>
+            </div>
+            <div class="animal-emoji-large" id="countingAnimalEmoji">🦁</div>
+            <p class="counting-question" id="countingQuestion">Berapa kaki hewan ini?</p>
+            <div class="number-choices" id="numberChoices"></div>
+        </div>
+
+        <!-- Game 4: Memory Match Screen -->
+        <div id="memoryScreen" class="quiz-screen">
+            <div class="quiz-header">
+                <h2 class="quiz-title">🧠 Memory Match</h2>
+                <div class="quiz-progress" id="memoryProgress"></div>
+                <div class="score-display">Pasangan: <span id="memoryScore">0</span>/4</div>
+            </div>
+            <div class="memory-grid" id="memoryGrid"></div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="resultScreen" class="result-screen">
+            <div class="result-icon" id="resultIcon">🎉</div>
+            <h2 class="result-title" id="resultTitle">Selesai!</h2>
+            <div class="stars-display" id="starsDisplay">⭐⭐⭐</div>
+            <div class="result-score" id="resultScore">Skor: 5/5</div>
+            <p class="result-message" id="resultMessage">Luar biasa! Kamu hebat!</p>
+            <div class="button-group">
+                <button class="btn-again" onclick="retryCurrentGame()">🔄 Main Lagi</button>
+                <button class="btn-menu" onclick="backToMenu()">🏠 Kembali ke Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio element -->
+    <audio id="soundGuessAudio"></audio>
+    <audio id="resultAudio"></audio>
+
+    <!-- Script -->
+    <script>
+        // ========================================
+        // Quiz Game Manager
+        // ========================================
+
+        const GAMES = {
+            soundGuess: 'soundGuess',
+            nameGuess: 'nameGuess',
+            counting: 'counting',
+            memory: 'memory'
+        };
+
+        // Animal Database
+        const animals = [
+            { name: 'Singa', emoji: '🦁', sound: 'assets/sounds/animals/lion.mp3', legs: 4 },
+            { name: 'Gajah', emoji: '🐘', sound: 'assets/sounds/animals/elephant.mp3', legs: 4 },
+            { name: 'Harimau', emoji: '🐯', sound: 'assets/sounds/animals/tiger.mp3', legs: 4 },
+            { name: 'Burung', emoji: '🐦', sound: 'assets/sounds/animals/bird.mp3', legs: 2 },
+            { name: 'Kucing', emoji: '🐱', sound: 'assets/sounds/animals/cat.mp3', legs: 4 }
+        ];
+
+        // Game State
+        let currentGame = null;
+        let gameState = {
+            soundGuess: { score: 0, total: 5, questions: [], currentQuestion: 0, answered: [] },
+            nameGuess: { score: 0, total: 5, questions: [], currentQuestion: 0, answered: [] },
+            counting: { score: 0, total: 5, questions: [], currentQuestion: 0, answered: [] },
+            memory: { score: 0, total: 4, cards: [], flipped: [], matched: [] }
+        };
+
+        // ========================================
+        // Start Game
+        // ========================================
+
+        function startGame(gameName) {
+            currentGame = gameName;
+            resetGameState(gameName);
+            hideAllScreens();
+
+            switch(gameName) {
+                case 'soundGuess':
+                    initSoundGuess();
+                    document.getElementById('soundGuessScreen').classList.add('active');
+                    break;
+                case 'nameGuess':
+                    initNameGuess();
+                    document.getElementById('nameGuessScreen').classList.add('active');
+                    break;
+                case 'counting':
+                    initCounting();
+                    document.getElementById('countingScreen').classList.add('active');
+                    break;
+                case 'memory':
+                    initMemory();
+                    document.getElementById('memoryScreen').classList.add('active');
+                    break;
+            }
+        }
+
+        function hideAllScreens() {
+            document.getElementById('gamesMenu').classList.remove('active');
+            document.getElementById('soundGuessScreen').classList.remove('active');
+            document.getElementById('nameGuessScreen').classList.remove('active');
+            document.getElementById('countingScreen').classList.remove('active');
+            document.getElementById('memoryScreen').classList.remove('active');
+            document.getElementById('resultScreen').classList.remove('active');
+        }
+
+        function resetGameState(gameName) {
+            gameState[gameName] = {
+                score: 0,
+                total: gameName === 'memory' ? 4 : 5,
+                questions: [],
+                currentQuestion: 0,
+                answered: [],
+                cards: [],
+                flipped: [],
+                matched: []
+            };
+        }
+
+        // ========================================
+        // GAME 1: Sound Guessing
+        // ========================================
+
+        function initSoundGuess() {
+            const state = gameState.soundGuess;
+            state.questions = generateQuestions(5);
+            updateProgressDots('soundProgress', 5);
+            showSoundGuessQuestion();
+        }
+
+        function generateQuestions(count) {
+            const questions = [];
+            for (let i = 0; i < count; i++) {
+                const correctAnimal = animals[Math.floor(Math.random() * animals.length)];
+                const wrongAnimals = animals.filter(a => a.name !== correctAnimal.name)
+                    .sort(() => Math.random() - 0.5)
+                    .slice(0, 3);
+                
+                const choices = [correctAnimal, ...wrongAnimals].sort(() => Math.random() - 0.5);
+                questions.push({
+                    correct: correctAnimal,
+                    choices: choices
+                });
+            }
+            return questions;
+        }
+
+        function showSoundGuessQuestion() {
+            const state = gameState.soundGuess;
+            if (state.currentQuestion >= state.total) {
+                endGame();
+                return;
+            }
+
+            const question = state.questions[state.currentQuestion];
+            const choicesContainer = document.getElementById('soundChoices');
+            choicesContainer.innerHTML = '';
+
+            question.choices.forEach((animal, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerHTML = `<div class="choice-emoji">${animal.emoji}</div><div class="choice-text">${animal.name}</div>`;
+                btn.onclick = () => answerSoundGuess(animal, question.correct, btn);
+                choicesContainer.appendChild(btn);
+            });
+
+            updateProgressDots('soundProgress', 5, state.currentQuestion);
+        }
+
+        function playSoundGuessAudio() {
+            const state = gameState.soundGuess;
+            const question = state.questions[state.currentQuestion];
+            const audio = document.getElementById('soundGuessAudio');
+            
+            // Create a simple beep sound using Web Audio API
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Different frequencies for different animals
+                const frequencies = {
+                    'Singa': 220,
+                    'Gajah': 110,
+                    'Harimau': 330,
+                    'Burung': 660,
+                    'Kucing': 440
+                };
+                
+                oscillator.frequency.setValueAtTime(frequencies[question.correct.name] || 440, audioContext.currentTime);
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log('Audio generation failed, using fallback');
+                // Fallback: just show the emoji briefly
+                const soundIcon = document.querySelector('.sound-icon');
+                const original = soundIcon.textContent;
+                soundIcon.textContent = question.correct.emoji;
+                setTimeout(() => soundIcon.textContent = original, 500);
+            }
+        }
+
+        function answerSoundGuess(chosen, correct, btn) {
+            const state = gameState.soundGuess;
+            const isCorrect = chosen.name === correct.name;
+            
+            if (isCorrect) {
+                btn.classList.add('correct');
+                state.score++;
+                createConfetti();
+                playCorrectSound();
+            } else {
+                btn.classList.add('wrong');
+                const correctBtn = Array.from(document.querySelectorAll('.choice-btn')).find(b =>
+                    b.textContent.includes(correct.emoji)
+                );
+                if (correctBtn) correctBtn.classList.add('correct');
+            }
+
+            setTimeout(() => {
+                state.currentQuestion++;
+                showSoundGuessQuestion();
+            }, 1500);
+        }
+
+        // ========================================
+        // GAME 2: Name Guessing
+        // ========================================
+
+        function initNameGuess() {
+            const state = gameState.nameGuess;
+            state.questions = generateQuestions(5);
+            updateProgressDots('nameProgress', 5);
+            showNameGuessQuestion();
+        }
+
+        function showNameGuessQuestion() {
+            const state = gameState.nameGuess;
+            if (state.currentQuestion >= state.total) {
+                endGame();
+                return;
+            }
+
+            const question = state.questions[state.currentQuestion];
+            document.getElementById('nameAnimalEmoji').textContent = question.correct.emoji;
+            
+            const choicesContainer = document.getElementById('nameChoices');
+            choicesContainer.innerHTML = '';
+
+            question.choices.forEach((animal) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerHTML = `<div class="choice-text">${animal.name}</div>`;
+                btn.onclick = () => answerNameGuess(animal, question.correct, btn);
+                choicesContainer.appendChild(btn);
+            });
+
+            updateProgressDots('nameProgress', 5, state.currentQuestion);
+        }
+
+        function answerNameGuess(chosen, correct, btn) {
+            const state = gameState.nameGuess;
+            const isCorrect = chosen.name === correct.name;
+            
+            if (isCorrect) {
+                btn.classList.add('correct');
+                state.score++;
+                createConfetti();
+                playCorrectSound();
+            } else {
+                btn.classList.add('wrong');
+                Array.from(document.querySelectorAll('.choice-btn')).forEach(b => {
+                    if (b.textContent.includes(correct.name)) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+
+            setTimeout(() => {
+                state.currentQuestion++;
+                showNameGuessQuestion();
+            }, 1500);
+        }
+
+        // ========================================
+        // GAME 3: Counting
+        // ========================================
+
+        function initCounting() {
+            const state = gameState.counting;
+            state.questions = generateCountingQuestions(5);
+            updateProgressDots('countingProgress', 5);
+            showCountingQuestion();
+        }
+
+        function generateCountingQuestions(count) {
+            const questions = [];
+            for (let i = 0; i < count; i++) {
+                const animal = animals[Math.floor(Math.random() * animals.length)];
+                const wrongAnswers = [];
+                for (let j = 0; j < 3; j++) {
+                    let wrong;
+                    do {
+                        wrong = Math.floor(Math.random() * 8) + 1;
+                    } while (wrong === animal.legs || wrongAnswers.includes(wrong));
+                    wrongAnswers.push(wrong);
+                }
+                const choices = [animal.legs, ...wrongAnswers].sort(() => Math.random() - 0.5);
+                questions.push({
+                    animal: animal,
+                    correct: animal.legs,
+                    choices: choices
+                });
+            }
+            return questions;
+        }
+
+        function showCountingQuestion() {
+            const state = gameState.counting;
+            if (state.currentQuestion >= state.total) {
+                endGame();
+                return;
+            }
+
+            const question = state.questions[state.currentQuestion];
+            document.getElementById('countingAnimalEmoji').textContent = question.animal.emoji;
+            document.getElementById('countingQuestion').textContent = `Berapa kaki ${question.animal.name.toLowerCase()}?`;
+            
+            const choicesContainer = document.getElementById('numberChoices');
+            choicesContainer.innerHTML = '';
+
+            question.choices.forEach((num) => {
+                const btn = document.createElement('button');
+                btn.className = 'number-btn';
+                btn.textContent = num;
+                btn.onclick = () => answerCounting(num, question.correct, btn);
+                choicesContainer.appendChild(btn);
+            });
+
+            updateProgressDots('countingProgress', 5, state.currentQuestion);
+        }
+
+        function answerCounting(chosen, correct, btn) {
+            const state = gameState.counting;
+            const isCorrect = chosen === correct;
+            
+            if (isCorrect) {
+                btn.classList.add('correct');
+                state.score++;
+                createConfetti();
+                playCorrectSound();
+            } else {
+                btn.classList.add('wrong');
+                Array.from(document.querySelectorAll('.number-btn')).forEach(b => {
+                    if (parseInt(b.textContent) === correct) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+
+            setTimeout(() => {
+                state.currentQuestion++;
+                showCountingQuestion();
+            }, 1500);
+        }
+
+        // ========================================
+        // GAME 4: Memory Match
+        // ========================================
+
+        function initMemory() {
+            const state = gameState.memory;
+            state.cards = generateMemoryCards();
+            state.flipped = [];
+            state.matched = [];
+            updateProgressDots('memoryProgress', 4);
+            renderMemoryCards();
+        }
+
+        function generateMemoryCards() {
+            const selected = animals.slice(0, 4);
+            const cards = [];
+            selected.forEach(animal => {
+                cards.push(animal);
+                cards.push(animal);
+            });
+            return cards.sort(() => Math.random() - 0.5);
+        }
+
+        function renderMemoryCards() {
+            const state = gameState.memory;
+            const grid = document.getElementById('memoryGrid');
+            grid.innerHTML = '';
+
+            state.cards.forEach((card, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'memory-card';
+                btn.id = `card-${index}`;
+                btn.textContent = '?';
+
+                if (state.matched.includes(index)) {
+                    btn.classList.add('matched');
+                    btn.textContent = card.emoji;
+                } else if (state.flipped.includes(index)) {
+                    btn.classList.add('flipped');
+                    btn.textContent = card.emoji;
+                }
+
+                btn.onclick = () => flipMemoryCard(index);
+                grid.appendChild(btn);
+            });
+        }
+
+        function flipMemoryCard(index) {
+            const state = gameState.memory;
+            
+            if (state.matched.includes(index) || state.flipped.includes(index)) return;
+            if (state.flipped.length >= 2) return;
+
+            state.flipped.push(index);
+            renderMemoryCards();
+
+            if (state.flipped.length === 2) {
+                const card1 = state.cards[state.flipped[0]];
+                const card2 = state.cards[state.flipped[1]];
+
+                if (card1.name === card2.name) {
+                    state.matched.push(...state.flipped);
+                    state.score++;
+                    setTimeout(() => {
+                        state.flipped = [];
+                        renderMemoryCards();
+                        if (state.matched.length === 8) {
+                            endGame();
+                        }
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        state.flipped = [];
+                        renderMemoryCards();
+                    }, 1000);
+                }
+            }
+        }
+
+        // ========================================
+        // Utility Functions
+        // ========================================
+
+        function updateProgressDots(elementId, total, current = 0) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = '';
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                if (i === current) dot.classList.add('active');
+                if (i < current) dot.classList.add('completed');
+                container.appendChild(dot);
+            }
+        }
+
+        function playCorrectSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Happy success sound - ascending notes
+                oscillator.frequency.setValueAtTime(523, audioContext.currentTime); // C5
+                oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 0.1); // E5
+                oscillator.frequency.setValueAtTime(784, audioContext.currentTime + 0.2); // G5
+                
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } catch (e) {
+                console.log('Success sound failed');
+            }
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.textContent = ['🎉', '⭐', '🎊', '✨'][Math.floor(Math.random() * 4)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-10px';
+                confetti.style.fontSize = '20px';
+                confetti.style.opacity = '1';
+                
+                document.body.appendChild(confetti);
+
+                const duration = 2 + Math.random() * 1;
+                const startTime = Date.now();
+                
+                function animate() {
+                    const elapsed = (Date.now() - startTime) / 1000;
+                    const progress = elapsed / duration;
+                    
+                    if (progress >= 1) {
+                        confetti.remove();
+                        return;
+                    }
+                    
+                    confetti.style.top = (-10 + progress * (window.innerHeight + 20)) + 'px';
+                    confetti.style.opacity = Math.max(0, 1 - progress * 2);
+                    requestAnimationFrame(animate);
+                }
+                
+                animate();
+            }
+        }
+
+        function getStars(score, total) {
+            const percentage = (score / total) * 100;
+            if (percentage === 100) return '⭐⭐⭐';
+            if (percentage >= 80) return '⭐⭐';
+            if (percentage >= 60) return '⭐';
+            return '';
+        }
+
+        function endGame() {
+            const state = gameState[currentGame];
+            const score = state.score;
+            const total = state.total;
+            const stars = getStars(score, total);
+
+            let icon = '🎉';
+            let title = 'Selesai!';
+            let message = 'Luar biasa! Kamu hebat!';
+
+            if (score === total) {
+                icon = '🏆';
+                title = 'Sempurna!';
+                message = 'Kamu adalah juara!';
+            } else if (score >= total * 0.8) {
+                icon = '😊';
+                title = 'Sangat Bagus!';
+                message = 'Kamu sangat pintar!';
+            } else if (score >= total * 0.6) {
+                icon = '👍';
+                title = 'Bagus!';
+                message = 'Kamu sudah lumayan!';
+            } else {
+                icon = '💪';
+                title = 'Coba Lagi!';
+                message = 'Semangat terus belajar!';
+            }
+
+            document.getElementById('resultIcon').textContent = icon;
+            document.getElementById('resultTitle').textContent = title;
+            document.getElementById('starsDisplay').textContent = stars;
+            document.getElementById('resultScore').textContent = `Skor: ${score}/${total}`;
+            document.getElementById('resultMessage').textContent = message;
+
+            hideAllScreens();
+            document.getElementById('resultScreen').classList.add('active');
+        }
+
+        function retryCurrentGame() {
+            startGame(currentGame);
+        }
+
+        function backToMenu() {
+            hideAllScreens();
+            document.getElementById('gamesMenu').classList.add('active');
+        }
+
+        console.log('✓ Quiz page loaded');
+    </script>
+    <footer class="footer">
+        <p>🎓 Belajar Sambil Bermain untuk Anak Cerdas 🎓</p>
+    </footer>
+</body>
+</html>
